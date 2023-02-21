@@ -5,50 +5,70 @@
 
 int main(void)
 {
-    GLFWwindow* window;
+	GLFWwindow* window;
 
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
+	/* Initialize the library */
+	if (!glfwInit())
+		return -1;
 
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
+	/* Create a windowed mode window and its OpenGL context */
+	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	if (!window)
+	{
+		glfwTerminate();
+		return -1;
+	}
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+	/* Make the window's context current */
+	glfwMakeContextCurrent(window);
 
-    /* Init GLEW */
-    if (glewInit() != GLEW_OK) {
-        std::cerr << "ERROR!" << std::endl;
-    }
+	/* Init GLEW */
+	if (glewInit() != GLEW_OK) {
+		std::cerr << "ERROR!" << std::endl;
+	}
 
-    std::cout << glGetString(GL_VERSION) << std::endl;
+	std::cout << glGetString(GL_VERSION) << std::endl;
 
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+	float positions[6] = {
+		-0.5f, -0.5f,
+		 0.0f,  0.5f,
+		 0.5f, -0.5f
+	};
 
-        /* Legacy OpenGL */
-        glBegin(GL_TRIANGLES);
-        glVertex2f(-0.5f, -0.5f);
-        glVertex2f(0.0f, 0.5f);
-        glVertex2f(0.5f, -0.5f);
-        glEnd();
+	/* Data to give OpenGL for single triangle */
+	unsigned int buffer;
+	glGenBuffers(1, &buffer);
+	/* Select which buffer will be drawn by OpenGL */
+	glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	/* Tell OpenGL what data is */
+	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 
-        /* Poll for and process events */
-        glfwPollEvents();
-    }
+	/* Loop until the user closes the window */
+	while (!glfwWindowShouldClose(window))
+	{
+		/* Render here */
+		glClear(GL_COLOR_BUFFER_BIT);
 
-    glfwTerminate();
-    return 0;
+		/* Legacy OpenGL */
+		/*glBegin(GL_TRIANGLES);
+		glVertex2f(-0.5f, -0.5f);
+		glVertex2f(0.0f, 0.5f);
+		glVertex2f(0.5f, -0.5f);
+		glEnd();*/
+
+		/* Modern OpenGL */
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		/* Swap front and back buffers */
+		glfwSwapBuffers(window);
+
+		/* Poll for and process events */
+		glfwPollEvents();
+	}
+
+	glfwTerminate();
+	return 0;
 }
