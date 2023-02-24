@@ -16,8 +16,8 @@ public:
     Shader(const std::string& filepath);
     ~Shader();
 
-    void Bind();
-    void UnBind();
+    void Bind() const;
+    void UnBind() const;
 
     // Set Uniforms
     void SetUniform4f(const std::string& name, float f0, float f1, float f2, float f3);

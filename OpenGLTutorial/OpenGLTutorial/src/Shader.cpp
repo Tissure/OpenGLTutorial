@@ -82,11 +82,11 @@ unsigned int Shader::CreateShader(const std::string& vertexShader, const std::st
     return program;
 }
 
-void Shader::Bind() {
+void Shader::Bind() const {
     GLCall(glUseProgram(m_RendererID));
 }
 
-void Shader::UnBind() {
+void Shader::UnBind() const {
     GLCall(glUseProgram(0));
 }
 
