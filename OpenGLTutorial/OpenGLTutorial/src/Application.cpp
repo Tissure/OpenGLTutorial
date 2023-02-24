@@ -21,7 +21,7 @@
 
 
 int main(void) {
-    GLFWwindow* window; 
+    GLFWwindow* window;
 
     /* Initialize the library */
     if (!glfwInit())
@@ -82,22 +82,34 @@ int main(void) {
 
         IndexBuffer ib(indices, 6);
 
-        /* 4:3 orthographic projection */
-        glm::mat4 proj = glm::ortho(0.0f, (float) windowWidth, 0.0f, (float)windowHeight, -1.0f, 1.0f);
-        glm::vec4 vp(100.0f, 100.0f, 0.0f, 1.0f);
-        glm::vec4 results = proj * vp;
+        /*
+        Model matrix: defines position, rotation and scale of the vertices of the model in the world.
+        View matrix: defines position and orientation of the "camera".
+        Projection matrix: Maps what the "camera" sees to NDC, taking care of aspect ratio and perspective.
+        */
+
+        /* Window orthographic projection matrix */
+        glm::mat4 proj = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -1.0f, 1.0f);
+
+        /* View matrix */
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+        
+        /* Model matrix */
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+
+        glm::mat4 mvp = proj * view * model;
 
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
         shader.SetUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
-        shader.SetUniformMat4f("u_MVP", proj);
+        shader.SetUniformMat4f("u_MVP", mvp);
 
 
-        Texture texture("res/textures/potato.jpg"); 
+        Texture texture("res/textures/potato.jpg");
         //Texture texture("res/textures/gooseKnife.png");
         texture.Bind();
         shader.SetUniform1i("u_Texture", 0);
-        
+
         /* Unbind everything */
         va.UnBind();
         vb.UnBind();
