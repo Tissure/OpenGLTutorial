@@ -2,20 +2,20 @@
 #include "Renderer.h"
 #include "imgui/imgui.h"
 
-Test::TestClearColor::TestClearColor() : m_ClearColor{ 0.2f, 0.3f,0.5f, 1.0f } {
+Tests::TestClearColor::TestClearColor() : m_ClearColor{ 0.2f, 0.3f,0.5f, 1.0f } {
 }
 
-Test::TestClearColor::~TestClearColor() {
+Tests::TestClearColor::~TestClearColor() {
 }
 
-void Test::TestClearColor::OnUpdate(float deltaTime) {
+void Tests::TestClearColor::OnUpdate(float deltaTime) {
 }
 
-void Test::TestClearColor::OnRender() {
+void Tests::TestClearColor::OnRender() {
     GLCall(glClearColor(m_ClearColor[0], m_ClearColor[1], m_ClearColor[2], m_ClearColor[3]));
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 }
 
-void Test::TestClearColor::OnImGuiRender() {
+void Tests::TestClearColor::OnImGuiRender() {
     ImGui::ColorEdit4("Clear Color", m_ClearColor);
 }
