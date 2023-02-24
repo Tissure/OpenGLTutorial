@@ -32,7 +32,9 @@ int main(void) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    int windowWidth = 960;
+    int windowHeight = 540;
+    window = glfwCreateWindow(windowWidth, windowHeight, "Hello World", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -54,10 +56,10 @@ int main(void) {
     { // Rescoping due to bug with GLGetError() and glfwTerminate()
         /* Coords of vertices */
         float positions[] = {
-            -0.5f, -0.5f, 0.0f, 0.0f,
-             0.5f, -0.5f, 1.0f, 0.0f,
-             0.5f,  0.5f, 1.0f, 1.0f,
-            -0.5f,  0.5f, 0.0f, 1.0f
+            100.0f, 100.0f, 0.0f, 0.0f,
+            200.0f, 100.0f, 1.0f, 0.0f,
+            200.0f, 200.0f, 1.0f, 1.0f,
+            100.0f, 200.0f, 0.0f, 1.0f
         };
 
         /* Specify indices of positions that GPU should use */
@@ -81,7 +83,9 @@ int main(void) {
         IndexBuffer ib(indices, 6);
 
         /* 4:3 orthographic projection */
-        glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+        glm::mat4 proj = glm::ortho(0.0f, (float) windowWidth, 0.0f, (float)windowHeight, -1.0f, 1.0f);
+        glm::vec4 vp(100.0f, 100.0f, 0.0f, 1.0f);
+        glm::vec4 results = proj * vp;
 
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();

@@ -22,6 +22,7 @@ struct VertexBufferElement {
     }
 };
 
+/* Layout of data inside buffer */
 class VertexBufferLayout {
 private:
     std::vector<VertexBufferElement> m_Elements;
