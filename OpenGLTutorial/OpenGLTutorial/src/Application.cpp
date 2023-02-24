@@ -13,6 +13,7 @@
 #include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
+#include "Texture.h"
 
 
 int main(void) {
@@ -49,10 +50,10 @@ int main(void) {
     { // Rescoping due to bug with GLGetError() and glfwTerminate()
         /* Coords of vertices */
         float positions[] = {
-            -0.5f, -0.5f,
-             0.5f, -0.5f,
-             0.5f,  0.5f,
-            -0.5f,  0.5f
+            -0.5f, -0.5f, 0.0f, 0.0f,
+             0.5f, -0.5f, 1.0f, 0.0f,
+             0.5f,  0.5f, 1.0f, 1.0f,
+            -0.5f,  0.5f, 0.0f, 1.0f
         };
 
         /* Specify indices of positions that GPU should use */
@@ -61,15 +62,16 @@ int main(void) {
             2,3,0
         };
 
+        GLCall(glEnable(GL_BLEND));
+        GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
         VertexArray va;
-        VertexBuffer vb(positions, 4 * 2 * sizeof(float));
+        VertexBuffer vb(positions, 4 * 4 * sizeof(float));
 
         VertexBufferLayout layout;
         layout.Push<float>(2);
+        layout.Push<float>(2);
         va.AddBuffer(vb, layout);
-
-        GLCall(glEnableVertexAttribArray(0));
-        GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
 
         IndexBuffer ib(indices, 6);
 
@@ -77,6 +79,12 @@ int main(void) {
         shader.Bind();
         shader.SetUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
 
+
+        Texture texture("res/textures/potato.jpg"); 
+        //Texture texture("res/textures/gooseKnife.png");
+        texture.Bind();
+        shader.SetUniform1i("u_Texture", 0);
+        
         /* Unbind everything */
         va.UnBind();
         vb.UnBind();
