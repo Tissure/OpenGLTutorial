@@ -25,7 +25,8 @@ namespace Tests {
         std::unique_ptr<VertexBufferLayout> m_Layout;
         std::unique_ptr<IndexBuffer> m_IB;
         std::unique_ptr<Shader> m_Shader;
-        std::unique_ptr<Texture> m_Texture;
+        std::unique_ptr<Texture> m_TextureA;
+        std::unique_ptr<Texture> m_TextureB;
 
         glm::mat4 m_Proj, m_View;
         glm::vec3 m_TranslationA, m_TranslationB;

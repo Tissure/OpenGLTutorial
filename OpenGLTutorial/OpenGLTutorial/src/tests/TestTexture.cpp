@@ -16,9 +16,9 @@ namespace Tests {
         /* Coords of vertices */
         float positions[] = {
             -50.0f, -50.0f, 0.0f, 0.0f,
-            50.0f, -50.0f, 1.0f, 0.0f,
-            50.0f, 50.0f, 1.0f, 1.0f,
-            -50.0f, 50.0f, 0.0f, 1.0f
+             50.0f, -50.0f, 1.0f, 0.0f,
+             50.0f,  50.0f, 1.0f, 1.0f,
+            -50.0f,  50.0f, 0.0f, 1.0f
         };
 
         /* Specify indices of positions that GPU should use */
@@ -34,8 +34,6 @@ namespace Tests {
         m_Shader = std::make_unique<Shader>("res/shaders/Basic.shader");
         m_VAO = std::make_unique<VertexArray>();
 
-
-
         m_VertexBuffer = std::make_unique<VertexBuffer>(positions, 4 * 4 * sizeof(float));
         m_Layout = std::make_unique<VertexBufferLayout>();
         m_Layout->Push<float>(2);
@@ -44,13 +42,12 @@ namespace Tests {
 
         m_IB = std::make_unique<IndexBuffer>(indices, 6);
 
+
+        m_TextureA = std::make_unique<Texture>("res/textures/potato.jpg");
+        m_TextureB = std::make_unique<Texture>("res/textures/gooseKnife.png");
+
         m_Shader->Bind();
-        m_Shader->SetUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
-
-        m_Texture = std::make_unique<Texture>("res/textures/potato.jpg");
-        //m_Texture = std::make_unique<Texture>("res/textures/gooseKnife.png");
-
-        m_Shader->SetUniform1i("u_Texture", 0);
+       
     }
 
     TestTexture::~TestTexture() {
@@ -65,11 +62,15 @@ namespace Tests {
 
         Renderer renderer;
 
-        m_Texture->Bind();
+
+        m_TextureA->Bind();
+        m_TextureB->Bind(1);
+
         {
             glm::mat4 model = glm::translate(glm::mat4(1.0f), m_TranslationA);
             glm::mat4 mvp = m_Proj * m_View * model;
             m_Shader->Bind();
+            m_Shader->SetUniform1i("u_Texture", 0);
             m_Shader->SetUniformMat4f("u_MVP", mvp);
             renderer.Draw(*m_VAO, *m_IB, *m_Shader);
         }
@@ -78,6 +79,7 @@ namespace Tests {
             glm::mat4 model = glm::translate(glm::mat4(1.0f), m_TranslationB);
             glm::mat4 mvp = m_Proj * m_View * model;
             m_Shader->Bind();
+            m_Shader->SetUniform1i("u_Texture", 1);
             m_Shader->SetUniformMat4f("u_MVP", mvp);
             renderer.Draw(*m_VAO, *m_IB, *m_Shader);
         }
